@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  hallmark-static:
+  hallmark:
     runs-on: ubuntu-latest
     steps:
       - name: Check out portfolio
@@ -20,8 +20,12 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+      - name: Install browser test dependency
+        run: npm install --global puppeteer-core
       - name: Fetch Hallmark checks
         run: git clone --depth 1 https://github.com/Nutlope/hallmark.git /tmp/hallmark
-      - name: Run Hallmark static quality checks
-        run: node /tmp/hallmark/skills/hallmark/scripts/sloplint.mjs index.html --genre editorial
+      - name: Run Hallmark static and responsive render checks
+        run: node /tmp/hallmark/skills/hallmark/scripts/sloplint.mjs index.html --genre editorial --render

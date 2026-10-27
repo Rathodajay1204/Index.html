@@ -1,0 +1,27 @@
+name: Portfolio quality checks
+
+on:
+  push:
+    paths:
+      - "index.html"
+      - ".github/workflows/portfolio-quality.yml"
+  pull_request:
+    paths:
+      - "index.html"
+      - ".github/workflows/portfolio-quality.yml"
+  workflow_dispatch:
+
+jobs:
+  hallmark-static:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out portfolio
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Fetch Hallmark checks
+        run: git clone --depth 1 https://github.com/Nutlope/hallmark.git /tmp/hallmark
+      - name: Run Hallmark static quality checks
+        run: node /tmp/hallmark/skills/hallmark/scripts/sloplint.mjs index.html --genre editorial
